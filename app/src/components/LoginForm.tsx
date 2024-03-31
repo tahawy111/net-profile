@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useContext } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IonAlert } from "@ionic/react";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
@@ -10,13 +10,8 @@ interface AuthFormProps {}
 
 export default function LoginForm({}: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem("username") && localStorage.getItem("password")) {
-      history.push("/profile");
-    }
-  }, []);
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -35,7 +30,7 @@ export default function LoginForm({}: AuthFormProps) {
       localStorage.setItem("username", formData.username);
       localStorage.setItem("password", formData.password);
       toast.success("تم تسجيل الدخول");
-      history.push("/profile");
+      navigate("/profile");
     } catch (error: any) {
       console.error(error);
       if (error.response.data.msg) {

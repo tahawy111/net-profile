@@ -1,9 +1,11 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
+import Layout from '../components/Layout';
 
 const Profile: React.FC = () => {
   return (
-    <IonPage>
+    <Layout>
+      <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>الملف الشخصي</IonTitle>
@@ -18,6 +20,7 @@ const Profile: React.FC = () => {
         <ExploreContainer name="الملف الشخصي" />
       </IonContent>
     </IonPage>
+    </Layout>
   );
 };
 

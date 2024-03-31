@@ -1,4 +1,4 @@
-import { Redirect, Route } from "react-router-dom";
+import { Route, Navigate, BrowserRouter, Routes } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -9,7 +9,6 @@ import {
   IonTabs,
   setupIonicReact,
 } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
 import { person, logOut } from "ionicons/icons";
 import { DollarSign } from "lucide-react";
 import LoginPage from "./pages/LoginPage";
@@ -36,6 +35,7 @@ import "./theme/variables.css";
 import Profile from "./pages/Profile";
 import Renew from "./pages/Renew";
 import { Toaster } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 setupIonicReact();
 
@@ -46,7 +46,7 @@ const PrivateRoute = ({
   auth: { isAuthenticated: boolean };
   children: React.ReactNode;
 }) => {
-  return isAuthenticated ? children : <Redirect to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const App: React.FC = () => {
@@ -55,58 +55,57 @@ const App: React.FC = () => {
   );
 
   return (
-    <IonApp>
+    <div className="flex flex-col h-screen">
       <Toaster />
-      <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route exact path="/login">
-              <LoginPage />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
+      <IonApp className="">
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                checkIfLoggedIn ? <Navigate to="/login" /> : <LoginPage />
+              }
+            />
+            <Route path="/" element={<Navigate to="/login" />} />
 
             {/* start route */}
-            <Route exact path="/logout">
-              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
-                <LogoutPage />
-              </PrivateRoute>
-            </Route>
+            <Route
+              path="/logout"
+              element={
+                <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                  <LogoutPage />
+                </PrivateRoute>
+              }
+            />
+            {/* <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}> */}
+
+            {/* </PrivateRoute> */}
             {/* end route */}
 
             {/* start route */}
-            <Route path="/profile">
-              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
-                <Profile />
-              </PrivateRoute>
-            </Route>
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                  <Profile />
+                </PrivateRoute>
+              }
+            ></Route>
             {/* end route */}
             {/* start route */}
-            <Route exact path="/renew">
-              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
-                <Renew />
-              </PrivateRoute>
-            </Route>
+            <Route
+              path="/renew"
+              element={
+                <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                  <Renew />
+                </PrivateRoute>
+              }
+            />
             {/* end route */}
-          </IonRouterOutlet>
-          <IonTabBar className="" slot="bottom">
-            <IonTabButton tab="tab1" href="/logout">
-              <IonIcon aria-hidden="true" icon={logOut} />
-              <IonLabel>تسجيل الخروج</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="renew" href="/renew">
-              <DollarSign />
-              <IonLabel>تجديد الاشتراك</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/profile">
-              <IonIcon aria-hidden="true" icon={person} />
-              <IonLabel>الملف الشخصي</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonReactRouter>
-    </IonApp>
+          </Routes>
+        </BrowserRouter>
+      </IonApp>
+    </div>
   );
 };
 

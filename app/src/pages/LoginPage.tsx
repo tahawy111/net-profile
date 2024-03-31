@@ -6,10 +6,12 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import LoginForm from "../components/LoginForm";
+import Layout from "../components/Layout";
 
 const LoginPage: React.FC = () => {
   return (
-    <IonPage>
+    <Layout>
+      <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>تسجيل الدخول</IonTitle>
@@ -24,6 +26,7 @@ const LoginPage: React.FC = () => {
         <LoginForm />
       </IonContent>
     </IonPage>
+    </Layout>
   );
 };
 

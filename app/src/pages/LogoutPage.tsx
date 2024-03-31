@@ -1,9 +1,11 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
+import Layout from '../components/Layout';
 
 const Logout: React.FC = () => {
   return (
-    <IonPage>
+    <Layout>
+      <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>تسجيل الخروج</IonTitle>
@@ -18,6 +20,7 @@ const Logout: React.FC = () => {
         <ExploreContainer name="تسجيل الخروج" />
       </IonContent>
     </IonPage>
+    </Layout>
   );
 };
 
