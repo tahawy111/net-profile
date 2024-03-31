@@ -35,56 +35,79 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import Profile from "./pages/Profile";
 import Renew from "./pages/Renew";
+import { Toaster } from "react-hot-toast";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/login">
-            <LoginPage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
+const PrivateRoute = ({
+  auth: { isAuthenticated },
+  children,
+}: {
+  auth: { isAuthenticated: boolean };
+  children: React.ReactNode;
+}) => {
+  return isAuthenticated ? children : <Redirect to="/login" />;
+};
 
-          {/* start route */}
-          <Route exact path="/logout">
-            <LogoutPage />
-          </Route>
-          {/* end route */}
+const App: React.FC = () => {
+  const checkIfLoggedIn = !!(
+    localStorage.getItem("username") && localStorage.getItem("password")
+  );
 
-          {/* start route */}
-          <Route exact path="/profile">
-            <Profile />
-          </Route>
-          {/* end route */}
-          {/* start route */}
-          <Route exact path="/renew">
-            <Renew />
-          </Route>
-          {/* end route */}
+  return (
+    <IonApp>
+      <Toaster />
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/login">
+              <LoginPage />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
 
-        </IonRouterOutlet>
-        <IonTabBar className="" slot="bottom">
-          <IonTabButton tab="tab1" href="/logout">
-            <IonIcon aria-hidden="true" icon={logOut} />
-            <IonLabel>تسجيل الخروج</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="renew" href="/renew">
-            <DollarSign />
-            <IonLabel>تجديد الاشتراك</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/profile">
-            <IonIcon aria-hidden="true" icon={person} />
-            <IonLabel>الملف الشخصي</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+            {/* start route */}
+            <Route exact path="/logout">
+              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                <LogoutPage />
+              </PrivateRoute>
+            </Route>
+            {/* end route */}
+
+            {/* start route */}
+            <Route path="/profile">
+              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                <Profile />
+              </PrivateRoute>
+            </Route>
+            {/* end route */}
+            {/* start route */}
+            <Route exact path="/renew">
+              <PrivateRoute auth={{ isAuthenticated: checkIfLoggedIn }}>
+                <Renew />
+              </PrivateRoute>
+            </Route>
+            {/* end route */}
+          </IonRouterOutlet>
+          <IonTabBar className="" slot="bottom">
+            <IonTabButton tab="tab1" href="/logout">
+              <IonIcon aria-hidden="true" icon={logOut} />
+              <IonLabel>تسجيل الخروج</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="renew" href="/renew">
+              <DollarSign />
+              <IonLabel>تجديد الاشتراك</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab3" href="/profile">
+              <IonIcon aria-hidden="true" icon={person} />
+              <IonLabel>الملف الشخصي</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
